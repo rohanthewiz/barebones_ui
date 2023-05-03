@@ -7,23 +7,28 @@
             background-color: lightsteelblue;
         }
 
-        #side-menu {
+        #left-section {
             position: relative;
         }
 
-        #side-menu .grip-icon {
+        #left-section .grip-icon {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 0.5rem;
+            right: 1rem;
             width: 24px;
             height: 24px;
+            cursor: w-resize;
             /* your other styles */
         }
 
         #main-container {
             display: grid;
             grid-template-columns: 1fr 4fr;
-            grid-gap: 1rem;
+            grid-gap: 0.1rem;
+        }
+
+        #main-content {
+            padding: 0.2rem 0.3rem;
         }
 
         /* Styling for the accordion menu */
@@ -37,7 +42,7 @@
             text-align: left;
             outline: none;
             font-size: 15px;
-            transition: 0.4s;
+            transition: 0.2s;
         }
 
         .accordion.active, .accordion:hover {
@@ -49,7 +54,7 @@
             background-color: white;
             max-height: 0;
             overflow-y: auto;
-            transition: max-height 0.2s ease-out;
+            transition: max-height 0.15s ease-out;
         }
         .subpanel {
             padding: 0 18px;
@@ -77,8 +82,8 @@
             transition: 0.3s;
         }
 
-        .submenu button:hover {
-            background-color: #eee;
+        .submenu button.active, .submenu button:hover {
+            background-color: #ddd;
         }
 
         .submenu .subpanel {
@@ -90,55 +95,57 @@
 <body>
 <!-- HTML markup for the accordion menu with submenus -->
 <div id="main-container">
-    <section id="side-menu">
+    <section id="left-section">
         <svg class="grip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M4 9h2v2H4zm0 4h2v2H4zm0 4h2v2H4zm4-8h2v2H8zm0 4h2v2H8zm0 4h2v2H8zm4-8h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2zm4-8h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2z"/>
             <path fill="none" d="M0 0h24v24H0z"/>
         </svg>
-        <button class="accordion">Section 1</button>
-        <div id="first-top-panel" class="top-panel">
-            <div class="submenu">
-                <button>Subsection 1.1</button>
-                <div id="first-sub-panel" class="subpanel">
-                    <p>Content for Subsection 1.1</p>
+        <div id="accordion-menu">
+            <button class="accordion">Section 1</button>
+            <div id="first-top-panel" class="top-panel">
+                <div class="submenu">
+                    <button>Subsection 1.1</button>
+                    <div id="first-sub-panel" class="subpanel">
+                        <p>Content for Subsection 1.1</p>
+                    </div>
+                </div>
+                <div class="submenu">
+                    <button>Subsection 1.2</button>
+                    <div class="subpanel">
+                        <p>Content for Subsection 1.2</p>
+                    </div>
                 </div>
             </div>
-            <div class="submenu">
-                <button>Subsection 1.2</button>
-                <div class="subpanel">
-                    <p>Content for Subsection 1.2</p>
-                </div>
-            </div>
-        </div>
 
-        <button class="accordion">Section 2</button>
-        <div class="top-panel">
-            <div class="submenu">
-                <button>Subsection 2.1</button>
-                <div class="subpanel">
-                    <p>Content for Subsection 2.1</p>
+            <button class="accordion">Section 2</button>
+            <div class="top-panel">
+                <div class="submenu">
+                    <button>Subsection 2.1</button>
+                    <div class="subpanel">
+                        <p>Content for Subsection 2.1</p>
+                    </div>
+                </div>
+                <div class="submenu">
+                    <button>Subsection 2.2</button>
+                    <div class="subpanel">
+                        <p>Content for Subsection 2.2</p>
+                    </div>
                 </div>
             </div>
-            <div class="submenu">
-                <button>Subsection 2.2</button>
-                <div class="subpanel">
-                    <p>Content for Subsection 2.2</p>
-                </div>
-            </div>
-        </div>
 
-        <button class="accordion">Section 3</button>
-        <div class="top-panel">
-            <div class="submenu">
-                <button>Subsection 3.1</button>
-                <div class="subpanel">
-                    <p>Content for Subsection 3.1</p>
+            <button class="accordion">Section 3</button>
+            <div class="top-panel">
+                <div class="submenu">
+                    <button>Subsection 3.1</button>
+                    <div class="subpanel">
+                        <p>Content for Subsection 3.1</p>
+                    </div>
                 </div>
-            </div>
-            <div class="submenu">
-                <button>Subsection 3.2</button>
-                <div class="subpanel">
-                    <p>Content for Subsection 3.2</p>
+                <div class="submenu">
+                    <button>Subsection 3.2</button>
+                    <div class="subpanel">
+                        <p>Content for Subsection 3.2</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -156,7 +163,7 @@
 </div>
 
 <script>
-    // Add functionality to the accordion menu with submenus
+    // Add click handlers for top-level
     const acc = document.getElementsByClassName("accordion");
     let i;
     for (i = 0; i < acc.length; i++) {
@@ -164,17 +171,24 @@
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
             this.classList.toggle("active");
+
             /* Toggle between hiding and showing the active panel */
             let topPanel = this.nextElementSibling;
-            if (topPanel.style.maxHeight){
+            if (topPanel.style.maxHeight) {
                 topPanel.style.maxHeight = null;
-            } else {
+                // set all children submenus to 0 height also
+                const subs = topPanel.querySelectorAll(".subpanel")
+                let j;
+                for (j = 0; j < subs.length; j++) {
+                    subs[j].style.maxHeight = null;
+                }
+            } else { // expand
                 topPanel.style.maxHeight = topPanel.scrollHeight + "px";
             }
         });
     }
 
-    // Add functionality to the submenu items
+    // Add click handlers for submenus
     const subAcc = document.querySelectorAll(".submenu button");
     let j;
     let lastButton;
@@ -182,12 +196,11 @@
         lastButton = subAcc[j]
         subAcc[j].addEventListener("click", function() {
             this.classList.toggle("active");
-            let subPanel = this.nextElementSibling; // lastElementChild
+            let subPanel = this.nextElementSibling;
             let parentPanel = this.parentNode.parentNode;
 
             // console.log("subPanel name", subPanel.nodeName);
             // console.log("subPanel class", subPanel.className);
-            // console.log("parentPanel", parentPanel.className);
             if (subPanel.style.maxHeight) {
                 subPanel.style.maxHeight = null;
             } else {
@@ -196,6 +209,23 @@
             }
         });
     }
+
+    // Add click handler for side menu grip
+    const grip = document.querySelector(".grip-icon");
+    grip.addEventListener("click", function() {
+        const ac = document.getElementById("accordion-menu");
+        const left = document.getElementById(("left-section"))
+        const main = document.getElementById(("main-content"))
+        if (ac.style.display === "block") {
+            ac.style.display = "none"
+            left.style.width = "2rem"
+            main.style.width = "calc(100vw - 4rem)"
+        } else {
+            left.style.width = "unset"
+            main.style.width = "unset"
+            ac.style.display = "block";
+        }
+    })
 </script>
 </body>
 </html>
