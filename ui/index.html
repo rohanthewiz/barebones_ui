@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accordion Menu with Submenus</title>
+    <style>
+        body {
+            background-color: lightsteelblue;
+        }
+
+        #side-menu {
+            position: relative;
+        }
+
+        #side-menu .grip-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            /* your other styles */
+        }
+
+        #main-container {
+            display: grid;
+            grid-template-columns: 1fr 4fr;
+            grid-gap: 1rem;
+        }
+
+        /* Styling for the accordion menu */
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+        .accordion.active, .accordion:hover {
+            background-color: #ccc;
+        }
+
+        .top-panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow-y: auto;
+            transition: max-height 0.2s ease-out;
+        }
+        .subpanel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow-y: auto;
+            transition: max-height 0.2s ease-out;
+        }
+
+        /* Styling for the submenus */
+        .submenu {
+            padding-left: 30px;
+        }
+
+        .submenu button {
+            background-color: transparent;
+            color: #444;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .submenu button:hover {
+            background-color: #eee;
+        }
+
+        .submenu .subpanel {
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- HTML markup for the accordion menu with submenus -->
+<div id="main-container">
+    <section id="side-menu">
+        <svg class="grip-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M4 9h2v2H4zm0 4h2v2H4zm0 4h2v2H4zm4-8h2v2H8zm0 4h2v2H8zm0 4h2v2H8zm4-8h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2zm4-8h2v2h-2zm0 4h2v2h-2zm0 4h2v2h-2z"/>
+            <path fill="none" d="M0 0h24v24H0z"/>
+        </svg>
+        <button class="accordion">Section 1</button>
+        <div id="first-top-panel" class="top-panel">
+            <div class="submenu">
+                <button>Subsection 1.1</button>
+                <div id="first-sub-panel" class="subpanel">
+                    <p>Content for Subsection 1.1</p>
+                </div>
+            </div>
+            <div class="submenu">
+                <button>Subsection 1.2</button>
+                <div class="subpanel">
+                    <p>Content for Subsection 1.2</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="accordion">Section 2</button>
+        <div class="top-panel">
+            <div class="submenu">
+                <button>Subsection 2.1</button>
+                <div class="subpanel">
+                    <p>Content for Subsection 2.1</p>
+                </div>
+            </div>
+            <div class="submenu">
+                <button>Subsection 2.2</button>
+                <div class="subpanel">
+                    <p>Content for Subsection 2.2</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="accordion">Section 3</button>
+        <div class="top-panel">
+            <div class="submenu">
+                <button>Subsection 3.1</button>
+                <div class="subpanel">
+                    <p>Content for Subsection 3.1</p>
+                </div>
+            </div>
+            <div class="submenu">
+                <button>Subsection 3.2</button>
+                <div class="subpanel">
+                    <p>Content for Subsection 3.2</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="main-content">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ac venenatis mi. Cras
+            placerat varius neque, vel auctor tellus rutrum nec. Curabitur vestibulum lorem
+            eget tellus vulputate dictum. Fusce posuere diam dui, et interdum velit
+            sollicitudin nec. Sed molestie tincidunt nibh, a elementum erat semper sit
+            amet. Morbi venenatis, dui a venenatis congue, ante ipsum malesuada sapien, at
+            maximus ante libero sed enim. Vestibulum ante ipsum primis in faucibus orci
+            luctus et ultrices posuere cubilia Curae; Cras eget ex at magna varius
+            pharetra eget a elit.</p>
+    </section>
+</div>
+
+<script>
+    // Add functionality to the accordion menu with submenus
+    const acc = document.getElementsByClassName("accordion");
+    let i;
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active");
+            /* Toggle between hiding and showing the active panel */
+            let topPanel = this.nextElementSibling;
+            if (topPanel.style.maxHeight){
+                topPanel.style.maxHeight = null;
+            } else {
+                topPanel.style.maxHeight = topPanel.scrollHeight + "px";
+            }
+        });
+    }
+
+    // Add functionality to the submenu items
+    const subAcc = document.querySelectorAll(".submenu button");
+    let j;
+    let lastButton;
+    for (j = 0; j < subAcc.length; j++) {
+        lastButton = subAcc[j]
+        subAcc[j].addEventListener("click", function() {
+            this.classList.toggle("active");
+            let subPanel = this.nextElementSibling; // lastElementChild
+            let parentPanel = this.parentNode.parentNode;
+
+            // console.log("subPanel name", subPanel.nodeName);
+            // console.log("subPanel class", subPanel.className);
+            // console.log("parentPanel", parentPanel.className);
+            if (subPanel.style.maxHeight) {
+                subPanel.style.maxHeight = null;
+            } else {
+                subPanel.style.maxHeight = subPanel.scrollHeight + "px";
+                parentPanel.style.maxHeight = parentPanel.scrollHeight + subPanel.scrollHeight + "px";
+            }
+        });
+    }
+</script>
+</body>
+</html>
